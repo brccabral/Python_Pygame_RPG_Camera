@@ -111,8 +111,8 @@ camera_group = CameraGroup()
 player = Player((640, 360), camera_group)
 
 for i in range(20):
-    random_x = randint(0, 1000)
-    random_y = randint(0, 1000)
+    random_x = randint(1000, 2000)
+    random_y = randint(1000, 2000)
     Tree((random_x, random_y), camera_group)
 
 while True:
