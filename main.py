@@ -187,6 +187,8 @@ class CameraGroup(pygame.sprite.Group):
             self.zoom_scale += 0.1
         if keys[pygame.K_e]:
             self.zoom_scale -= 0.1
+            if self.zoom_scale < 0:
+                self.zoom_scale = 0
 
     def custom_draw(self, player):
 
@@ -197,9 +199,11 @@ class CameraGroup(pygame.sprite.Group):
         # self.keyboard_camera_control()
 
         self.mouse_camera_control()
+        self.zoom_keyboard_camera_control()
 
-        # draw everything on internal surface, and then draw
-        # internal surface on screen
+        # draw everything on internal surface,
+        # scale the internal surface with zoom
+        # and then draw scaled surface on screen
         self.internal_surface.fill('#71ddee')
 
         # ground - draw it first
@@ -211,8 +215,11 @@ class CameraGroup(pygame.sprite.Group):
             offset_pos = sprite.rect.topleft - self.offset
             self.internal_surface.blit(sprite.image, offset_pos)
 
-        self.display_surface.blit(
-            self.internal_surface, self.intenal_surface_rect)
+        scaled_surface = pygame.transform.scale(
+            self.internal_surface, self.internal_surface_size_vector * self.zoom_scale)
+        scaled_rect = scaled_surface.get_rect(
+            center=(self.half_width, self.half_height))
+        self.display_surface.blit(scaled_surface, scaled_rect)
         # box_rect = pygame.Rect(self.camera_rect.left - self.offset.x, self.camera_rect.top -
         #                        self.offset.y, self.camera_rect.width, self.camera_rect.height)
         # pygame.draw.rect(self.display_surface, 'yellow', box_rect, 5)
@@ -247,6 +254,8 @@ while True:
 
         if event.type == pygame.MOUSEWHEEL:
             camera_group.zoom_scale += event.y * 0.03
+            if camera_group.zoom_scale < 0:
+                camera_group.zoom_scale = 0
 
     screen.fill('#71ddee')
 
