@@ -75,7 +75,8 @@ class CameraGroup(pygame.sprite.Group):
         # new surface need to have same center as screen
         self.intenal_surface_rect = self.internal_surface.get_rect(
             center=(self.half_width, self.half_height))
-        self.internal_surface_size_vector = pygame.math.Vector2(self.internal_surface_size)
+        self.internal_surface_size_vector = pygame.math.Vector2(
+            self.internal_surface_size)
 
         # ground
         self.ground_surface = pygame.image.load(
@@ -197,15 +198,21 @@ class CameraGroup(pygame.sprite.Group):
 
         self.mouse_camera_control()
 
+        # draw everything on internal surface, and then draw
+        # internal surface on screen
+        self.internal_surface.fill('#71ddee')
+
         # ground - draw it first
         ground_offset = self.ground_rect.topleft - self.offset
-        self.display_surface.blit(self.ground_surface, ground_offset)
+        self.internal_surface.blit(self.ground_surface, ground_offset)
 
         # active elements - draw after background stuff
         for sprite in sorted(self.sprites(), key=lambda sprite: sprite.rect.centery):
             offset_pos = sprite.rect.topleft - self.offset
-            self.display_surface.blit(sprite.image, offset_pos)
+            self.internal_surface.blit(sprite.image, offset_pos)
 
+        self.display_surface.blit(
+            self.internal_surface, self.intenal_surface_rect)
         # box_rect = pygame.Rect(self.camera_rect.left - self.offset.x, self.camera_rect.top -
         #                        self.offset.y, self.camera_rect.width, self.camera_rect.height)
         # pygame.draw.rect(self.display_surface, 'yellow', box_rect, 5)
