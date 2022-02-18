@@ -106,7 +106,7 @@ class CameraGroup(pygame.sprite.Group):
 
     def mouse_camera_control(self):
         # mouse.set_pos() can only be called once per frame
-        # so, we need to set conditions not only for all 4 sides, 
+        # so, we need to set conditions not only for all 4 sides,
         # but also for all 4 corners
 
         mouse = pygame.math.Vector2(pygame.mouse.get_pos())
@@ -133,13 +133,15 @@ class CameraGroup(pygame.sprite.Group):
         elif mouse.y < top_border:
             # topleft corner
             if mouse.x < left_border:
-                mouse_offset_vector = mouse - pygame.math.Vector2(left_border, top_border)
+                mouse_offset_vector = mouse - \
+                    pygame.math.Vector2(left_border, top_border)
                 pygame.mouse.set_pos((left_border, top_border))
             # top right corner
             if mouse.x > right_border:
-                mouse_offset_vector = mouse - pygame.math.Vector2(right_border, top_border)
+                mouse_offset_vector = mouse - \
+                    pygame.math.Vector2(right_border, top_border)
                 pygame.mouse.set_pos((right_border, top_border))
-        
+
         # to check top and bottom, mouse needs to be between left and right
         if left_border < mouse.x < right_border:
             # move mouse to the top, moves the map
@@ -150,6 +152,18 @@ class CameraGroup(pygame.sprite.Group):
             if mouse.y > bottom_border:
                 mouse_offset_vector.y = mouse.y - bottom_border
                 pygame.mouse.set_pos((mouse.x, bottom_border))
+        # check for top corners
+        elif mouse.y > bottom_border:
+            # topleft corner
+            if mouse.x < left_border:
+                mouse_offset_vector = mouse - \
+                    pygame.math.Vector2(left_border, bottom_border)
+                pygame.mouse.set_pos((left_border, bottom_border))
+            # top right corner
+            if mouse.x > right_border:
+                mouse_offset_vector = mouse - \
+                    pygame.math.Vector2(right_border, bottom_border)
+                pygame.mouse.set_pos((right_border, bottom_border))
 
         self.offset += mouse_offset_vector
 
