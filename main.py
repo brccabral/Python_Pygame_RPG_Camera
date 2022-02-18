@@ -50,6 +50,17 @@ class CameraGroup(pygame.sprite.Group):
         self.half_width = self.display_surface.get_size()[0] // 2
         self.half_height = self.display_surface.get_size()[1] // 2
 
+        # camera box setup
+        self.camera_borders = {'left': 200,
+                               'right': 200, 'top': 100, 'bottom': 100}
+        l = self.camera_borders['left']
+        t = self.camera_borders['top']
+        w = self.display_surface.get_size(
+        )[0] - (self.camera_borders['left'] + self.camera_borders['right'])
+        h = self.display_surface.get_size(
+        )[1] - (self.camera_borders['top'] + self.camera_borders['bottom'])
+        self.camera_rect = pygame.Rect(l, t, w, h)
+
         # ground
         self.ground_surface = pygame.image.load(
             'graphics/ground.png').convert_alpha()
@@ -71,6 +82,8 @@ class CameraGroup(pygame.sprite.Group):
         for sprite in sorted(self.sprites(), key=lambda sprite: sprite.rect.centery):
             offset_pos = sprite.rect.topleft - self.offseet
             self.display_surface.blit(sprite.image, offset_pos)
+
+        pygame.draw.rect(self.display_surface, 'yellow', self.camera_rect, 5)
 
 
 pygame.init()
