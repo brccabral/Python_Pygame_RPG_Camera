@@ -46,7 +46,7 @@ class CameraGroup(pygame.sprite.Group):
         self.display_surface = pygame.display.get_surface()
 
         # camera offset
-        self.offseet = pygame.math.Vector2()
+        self.offset = pygame.math.Vector2()
         self.half_width = self.display_surface.get_size()[0] // 2
         self.half_height = self.display_surface.get_size()[1] // 2
 
@@ -67,23 +67,39 @@ class CameraGroup(pygame.sprite.Group):
         self.ground_rect = self.ground_surface.get_rect()
 
     def center_target_camera(self, target: pygame.sprite.Sprite):
-        self.offseet.x = target.rect.centerx - self.half_width
-        self.offseet.y = target.rect.centery - self.half_height
+        self.offset.x = target.rect.centerx - self.half_width
+        self.offset.y = target.rect.centery - self.half_height
+
+    def box_target_camera(self, target: pygame.sprite.Sprite):
+        if target.rect.left < self.camera_rect.left:
+            self.camera_rect.left = target.rect.left
+        if target.rect.right > self.camera_rect.right:
+            self.camera_rect.right = target.rect.right
+        if target.rect.top < self.camera_rect.top:
+            self.camera_rect.top = target.rect.top
+        if target.rect.bottom > self.camera_rect.bottom:
+            self.camera_rect.bottom = target.rect.bottom
+
+        self.offset.x = self.camera_rect.left - self.camera_borders['left']
+        self.offset.y = self.camera_rect.top - self.camera_borders['top']
 
     def custom_draw(self, player):
 
-        self.center_target_camera(player)
+        # self.center_target_camera(player)
+        self.box_target_camera(player)
 
         # ground - draw it first
-        ground_offset = self.ground_rect.topleft - self.offseet
+        ground_offset = self.ground_rect.topleft - self.offset
         self.display_surface.blit(self.ground_surface, ground_offset)
 
         # active elements - draw after background stuff
         for sprite in sorted(self.sprites(), key=lambda sprite: sprite.rect.centery):
-            offset_pos = sprite.rect.topleft - self.offseet
+            offset_pos = sprite.rect.topleft - self.offset
             self.display_surface.blit(sprite.image, offset_pos)
 
-        pygame.draw.rect(self.display_surface, 'yellow', self.camera_rect, 5)
+        box_rect = pygame.Rect(self.camera_rect.left - self.offset.x, self.camera_rect.top -
+                               self.offset.y, self.camera_rect.width, self.camera_rect.height)
+        pygame.draw.rect(self.display_surface, 'yellow', box_rect, 5)
 
 
 pygame.init()
