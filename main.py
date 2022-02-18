@@ -67,6 +67,15 @@ class CameraGroup(pygame.sprite.Group):
 
         # zoom
         self.zoom_scale = 1
+        # too large surface can reduce pygame speed
+        self.internal_surface_size = (2500, 2500)
+        # new surface needs Alpha channel
+        self.internal_surface = pygame.Surface(
+            self.internal_surface_size, pygame.SRCALPHA)
+        # new surface need to have same center as screen
+        self.intenal_surface_rect = self.internal_surface.get_rect(
+            center=(self.half_width, self.half_height))
+        self.internal_surface_size_vector = pygame.math.Vector2(self.internal_surface_size)
 
         # ground
         self.ground_surface = pygame.image.load(
