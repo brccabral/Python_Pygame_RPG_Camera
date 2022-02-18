@@ -45,7 +45,17 @@ class CameraGroup(pygame.sprite.Group):
         super().__init__()
         self.display_surface = pygame.display.get_surface()
 
+        # ground
+        self.ground_surface = pygame.image.load(
+            'graphics/ground.png').convert_alpha()
+        self.ground_rect = self.ground_surface.get_rect()
+
     def custom_draw(self):
+
+        # ground - draw it first
+        self.display_surface.blit(self.ground_surface, self.ground_rect)
+
+        # active elements - draw after background stuff
         for sprite in sorted(self.sprites(), key=lambda sprite: sprite.rect.centery):
             self.display_surface.blit(sprite.image, sprite.rect)
 
