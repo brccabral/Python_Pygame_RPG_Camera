@@ -104,12 +104,34 @@ class CameraGroup(pygame.sprite.Group):
         self.offset.x = self.camera_rect.left - self.camera_borders['left']
         self.offset.y = self.camera_rect.top - self.camera_borders['top']
 
+    def mouse_camera_control(self):
+        mouse = pygame.math.Vector2(pygame.mouse.get_pos())
+        mouse_offset_vector = pygame.math.Vector2()
+
+        left_border = self.camera_borders['left']
+        top_border = self.camera_borders['top']
+        right_border = self.display_surface.get_size(
+        )[0] - self.camera_borders['right']
+        bottom_border = self.display_surface.get_size(
+        )[1] - self.camera_borders['bottom']
+
+        # move mouse to the left, moves the map
+        if top_border < mouse.y < bottom_border:
+            if mouse.x < left_border:
+                mouse_offset_vector.x = mouse.x - left_border
+                pygame.mouse.set_pos((left_border, mouse.y))
+
+        self.offset += mouse_offset_vector
+
     def custom_draw(self, player):
 
         # self.center_target_camera(player)
+
         # using box and keyboard at the same time
-        self.box_target_camera(player)
-        self.keyboard_camera_control()
+        # self.box_target_camera(player)
+        # self.keyboard_camera_control()
+
+        self.mouse_camera_control()
 
         # ground - draw it first
         ground_offset = self.ground_rect.topleft - self.offset
