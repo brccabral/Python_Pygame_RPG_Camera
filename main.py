@@ -105,6 +105,10 @@ class CameraGroup(pygame.sprite.Group):
         self.offset.y = self.camera_rect.top - self.camera_borders['top']
 
     def mouse_camera_control(self):
+        # mouse.set_pos() can only be called once per frame
+        # so, we need to set conditions not only for all 4 sides, 
+        # but also for all 4 corners
+
         mouse = pygame.math.Vector2(pygame.mouse.get_pos())
         mouse_offset_vector = pygame.math.Vector2()
 
@@ -125,6 +129,16 @@ class CameraGroup(pygame.sprite.Group):
             if mouse.x > right_border:
                 mouse_offset_vector.x = mouse.x - right_border
                 pygame.mouse.set_pos((right_border, mouse.y))
+        # check for top corners
+        elif mouse.y < top_border:
+            # topleft corner
+            if mouse.x < left_border:
+                mouse_offset_vector = mouse - pygame.math.Vector2(left_border, top_border)
+                pygame.mouse.set_pos((left_border, top_border))
+            # top right corner
+            if mouse.x > right_border:
+                mouse_offset_vector = mouse - pygame.math.Vector2(right_border, top_border)
+                pygame.mouse.set_pos((right_border, top_border))
         
         # to check top and bottom, mouse needs to be between left and right
         if left_border < mouse.x < right_border:
