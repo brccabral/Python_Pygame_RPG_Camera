@@ -65,6 +65,9 @@ class CameraGroup(pygame.sprite.Group):
         self.keyboard_speed = 5
         self.mouse_speed = 0.4
 
+        # zoom
+        self.zoom_scale = 1
+
         # ground
         self.ground_surface = pygame.image.load(
             'graphics/ground.png').convert_alpha()
@@ -168,6 +171,13 @@ class CameraGroup(pygame.sprite.Group):
 
         self.offset += mouse_offset_vector * self.mouse_speed
 
+    def zoom_keyboard_camera_control(self):
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_q]:
+            self.zoom_scale += 0.1
+        if keys[pygame.K_e]:
+            self.zoom_scale -= 0.1
+
     def custom_draw(self, player):
 
         # self.center_target_camera(player)
@@ -218,6 +228,9 @@ while True:
             if event.key == pygame.K_ESCAPE:
                 pygame.quit()
                 sys.exit()
+
+        if event.type == pygame.MOUSEWHEEL:
+            camera_group.zoom_scale += event.y * 0.03
 
     screen.fill('#71ddee')
 
