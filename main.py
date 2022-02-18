@@ -77,6 +77,12 @@ class CameraGroup(pygame.sprite.Group):
             center=(self.half_width, self.half_height))
         self.internal_surface_size_vector = pygame.math.Vector2(
             self.internal_surface_size)
+        # internal offset will draw elements using internal surface reference
+        self.internal_offset = pygame.math.Vector2()
+        self.internal_offset.x = self.internal_surface_size[0] // 2 - \
+            self.half_width
+        self.internal_offset.y = self.internal_surface_size[1] // 2 - \
+            self.half_height
 
         # ground
         self.ground_surface = pygame.image.load(
@@ -192,7 +198,8 @@ class CameraGroup(pygame.sprite.Group):
 
     def custom_draw(self, player):
 
-        # self.center_target_camera(player)
+        # cannot use center camera with box or keyboard
+        self.center_target_camera(player)
 
         # using box and keyboard at the same time
         # self.box_target_camera(player)
@@ -207,12 +214,12 @@ class CameraGroup(pygame.sprite.Group):
         self.internal_surface.fill('#71ddee')
 
         # ground - draw it first
-        ground_offset = self.ground_rect.topleft - self.offset
+        ground_offset = self.ground_rect.topleft - self.offset + self.internal_offset
         self.internal_surface.blit(self.ground_surface, ground_offset)
 
         # active elements - draw after background stuff
         for sprite in sorted(self.sprites(), key=lambda sprite: sprite.rect.centery):
-            offset_pos = sprite.rect.topleft - self.offset
+            offset_pos = sprite.rect.topleft - self.offset + self.internal_offset
             self.internal_surface.blit(sprite.image, offset_pos)
 
         scaled_surface = pygame.transform.scale(
