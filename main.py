@@ -44,6 +44,10 @@ class CameraGroup(pygame.sprite.Group):
     def __init__(self):
         super().__init__()
 
+    def custom_draw(self, screen):
+        for sprite in self.sprites():
+            screen.blit(sprite.image, sprite.rect)
+
 
 pygame.init()
 screen = pygame.display.set_mode((1280, 720))
@@ -71,7 +75,7 @@ while True:
     screen.fill('#71ddee')
 
     camera_group.update()
-    camera_group.draw(screen)
+    camera_group.custom_draw(screen)
 
     pygame.display.update()
     clock.tick(60)
