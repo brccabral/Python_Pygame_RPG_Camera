@@ -196,6 +196,10 @@ pygame.init()
 screen = pygame.display.set_mode((1280, 720))
 clock = pygame.time.Clock()
 
+# grab mouse to keep it inside Pygame window
+# this is used to avoid mouse going to fast outside the window
+pygame.event.set_grab(True)
+
 # setup
 camera_group = CameraGroup()
 player = Player((640, 360), camera_group)
