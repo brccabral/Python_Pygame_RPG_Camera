@@ -47,21 +47,29 @@ class CameraGroup(pygame.sprite.Group):
 
         # camera offset
         self.offseet = pygame.math.Vector2()
+        self.half_width = self.display_surface.get_size()[0] // 2
+        self.half_height = self.display_surface.get_size()[1] // 2
 
         # ground
         self.ground_surface = pygame.image.load(
             'graphics/ground.png').convert_alpha()
         self.ground_rect = self.ground_surface.get_rect()
 
-    def custom_draw(self):
+    def center_target_camera(self, target: pygame.sprite.Sprite):
+        self.offseet.x = target.rect.centerx - self.half_width
+        self.offseet.y = target.rect.centery - self.half_height
+
+    def custom_draw(self, player):
+
+        self.center_target_camera(player)
 
         # ground - draw it first
-        ground_offset = self.ground_rect.topleft + self.offseet
+        ground_offset = self.ground_rect.topleft - self.offseet
         self.display_surface.blit(self.ground_surface, ground_offset)
 
         # active elements - draw after background stuff
         for sprite in sorted(self.sprites(), key=lambda sprite: sprite.rect.centery):
-            offset_pos = sprite.rect.topleft + self.offseet
+            offset_pos = sprite.rect.topleft - self.offseet
             self.display_surface.blit(sprite.image, offset_pos)
 
 
@@ -91,7 +99,7 @@ while True:
     screen.fill('#71ddee')
 
     camera_group.update()
-    camera_group.custom_draw()
+    camera_group.custom_draw(player)
 
     pygame.display.update()
     clock.tick(60)
