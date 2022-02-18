@@ -61,8 +61,9 @@ class CameraGroup(pygame.sprite.Group):
         )[1] - (self.camera_borders['top'] + self.camera_borders['bottom'])
         self.camera_rect = pygame.Rect(l, t, w, h)
 
-        # keyboard camera speed
+        # camera speed
         self.keyboard_speed = 5
+        self.mouse_speed = 0.4
 
         # ground
         self.ground_surface = pygame.image.load(
@@ -165,7 +166,7 @@ class CameraGroup(pygame.sprite.Group):
                     pygame.math.Vector2(right_border, bottom_border)
                 pygame.mouse.set_pos((right_border, bottom_border))
 
-        self.offset += mouse_offset_vector
+        self.offset += mouse_offset_vector * self.mouse_speed
 
     def custom_draw(self, player):
 
