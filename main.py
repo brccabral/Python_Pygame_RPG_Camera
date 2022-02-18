@@ -125,6 +125,17 @@ class CameraGroup(pygame.sprite.Group):
             if mouse.x > right_border:
                 mouse_offset_vector.x = mouse.x - right_border
                 pygame.mouse.set_pos((right_border, mouse.y))
+        
+        # to check top and bottom, mouse needs to be between left and right
+        if left_border < mouse.x < right_border:
+            # move mouse to the top, moves the map
+            if mouse.y < top_border:
+                mouse_offset_vector.y = mouse.y - top_border
+                pygame.mouse.set_pos((mouse.x, top_border))
+            # move mouse to the bottom, moves the map
+            if mouse.y > bottom_border:
+                mouse_offset_vector.y = mouse.y - bottom_border
+                pygame.mouse.set_pos((mouse.x, bottom_border))
 
         self.offset += mouse_offset_vector
 
