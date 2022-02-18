@@ -61,6 +61,9 @@ class CameraGroup(pygame.sprite.Group):
         )[1] - (self.camera_borders['top'] + self.camera_borders['bottom'])
         self.camera_rect = pygame.Rect(l, t, w, h)
 
+        # keyboard camera speed
+        self.keyboard_speed = 5
+
         # ground
         self.ground_surface = pygame.image.load(
             'graphics/ground.png').convert_alpha()
@@ -83,10 +86,22 @@ class CameraGroup(pygame.sprite.Group):
         self.offset.x = self.camera_rect.left - self.camera_borders['left']
         self.offset.y = self.camera_rect.top - self.camera_borders['top']
 
+    def keyboard_camera_control(self):
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_a]:
+            self.offset.x -= self.keyboard_speed
+        if keys[pygame.K_d]:
+            self.offset.x += self.keyboard_speed
+        if keys[pygame.K_w]:
+            self.offset.y -= self.keyboard_speed
+        if keys[pygame.K_s]:
+            self.offset.y += self.keyboard_speed
+
     def custom_draw(self, player):
 
         # self.center_target_camera(player)
-        self.box_target_camera(player)
+        # self.box_target_camera(player)
+        self.keyboard_camera_control()
 
         # ground - draw it first
         ground_offset = self.ground_rect.topleft - self.offset
