@@ -87,20 +87,28 @@ class CameraGroup(pygame.sprite.Group):
         self.offset.y = self.camera_rect.top - self.camera_borders['top']
 
     def keyboard_camera_control(self):
+        # to use box and keyboard at the same time need to
+        # set the camera_rect first, and then the offset
+        # the player never leaves the screen, and
+        # the camera never moves away from player
         keys = pygame.key.get_pressed()
         if keys[pygame.K_a]:
-            self.offset.x -= self.keyboard_speed
+            self.camera_rect.x -= self.keyboard_speed
         if keys[pygame.K_d]:
-            self.offset.x += self.keyboard_speed
+            self.camera_rect.x += self.keyboard_speed
         if keys[pygame.K_w]:
-            self.offset.y -= self.keyboard_speed
+            self.camera_rect.y -= self.keyboard_speed
         if keys[pygame.K_s]:
-            self.offset.y += self.keyboard_speed
+            self.camera_rect.y += self.keyboard_speed
+
+        self.offset.x = self.camera_rect.left - self.camera_borders['left']
+        self.offset.y = self.camera_rect.top - self.camera_borders['top']
 
     def custom_draw(self, player):
 
         # self.center_target_camera(player)
-        # self.box_target_camera(player)
+        # using box and keyboard at the same time
+        self.box_target_camera(player)
         self.keyboard_camera_control()
 
         # ground - draw it first
