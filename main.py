@@ -97,9 +97,9 @@ class CameraGroup(pygame.sprite.Group):
             offset_pos = sprite.rect.topleft - self.offset
             self.display_surface.blit(sprite.image, offset_pos)
 
-        box_rect = pygame.Rect(self.camera_rect.left - self.offset.x, self.camera_rect.top -
-                               self.offset.y, self.camera_rect.width, self.camera_rect.height)
-        pygame.draw.rect(self.display_surface, 'yellow', box_rect, 5)
+        # box_rect = pygame.Rect(self.camera_rect.left - self.offset.x, self.camera_rect.top -
+        #                        self.offset.y, self.camera_rect.width, self.camera_rect.height)
+        # pygame.draw.rect(self.display_surface, 'yellow', box_rect, 5)
 
 
 pygame.init()
