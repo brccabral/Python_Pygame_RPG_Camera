@@ -89,11 +89,11 @@ class CameraGroup(pygame.sprite.Group):
             'graphics/ground.png').convert_alpha()
         self.ground_rect = self.ground_surface.get_rect()
 
-    def center_target_camera(self, target: pygame.sprite.Sprite):
+    def center_target_camera(self, target: Player):
         self.offset.x = target.rect.centerx - self.half_width
         self.offset.y = target.rect.centery - self.half_height
 
-    def box_target_camera(self, target: pygame.sprite.Sprite):
+    def box_target_camera(self, target: Player):
         if target.rect.left < self.camera_rect.left:
             self.camera_rect.left = target.rect.left
         if target.rect.right > self.camera_rect.right:
@@ -205,7 +205,8 @@ class CameraGroup(pygame.sprite.Group):
         # self.box_target_camera(player)
         # self.keyboard_camera_control()
 
-        self.mouse_camera_control()
+        # cannot use mouse with center_target_camera
+        # self.mouse_camera_control()
         self.zoom_keyboard_camera_control()
 
         # draw everything on internal surface,
@@ -237,8 +238,8 @@ screen = pygame.display.set_mode((1280, 720))
 clock = pygame.time.Clock()
 
 # grab mouse to keep it inside Pygame window
-# this is used to avoid mouse going to fast outside the window
-pygame.event.set_grab(True)
+# this is used to avoid mouse going too fast outside the window
+# pygame.event.set_grab(True)
 
 # setup
 camera_group = CameraGroup()
